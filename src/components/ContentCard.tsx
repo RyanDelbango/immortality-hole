@@ -8,8 +8,8 @@ interface ContentCardProps {
 export default function ContentCard({ onArrowClick, isVisible }: ContentCardProps) {
   return (
     <div className={`transition-opacity ${isVisible ? 'duration-1000' : 'duration-300'} ease-in ${isVisible ? 'opacity-100' : 'opacity-0'} ${!isVisible ? 'pointer-events-none' : ''}`}>
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body items-center text-center">
+      <div className="card w-full max-w-sm mx-auto bg-base-100 shadow-xl">
+        <div className="card-body items-center text-center p-4 sm:p-6">
           <h2 className="card-title">Testing</h2>
           <div className="card-actions justify-center mt-4">
             <button className="btn btn-circle" onClick={onArrowClick}>

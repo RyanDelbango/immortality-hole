@@ -46,21 +46,22 @@ export default function Home() {
   
   return (
     <div 
-      className="min-h-screen w-full overflow-x-auto bg-black"
+      className="min-h-screen w-full bg-black"
     >
       <div 
-        className="flex items-center justify-center h-screen bg-no-repeat bg-center"
+        className="flex items-center justify-center min-h-screen bg-no-repeat bg-center"
         style={{ 
           backgroundImage: "url('/hole.png')",
-          backgroundSize: "auto 100%", 
-          minWidth: "100%",
+          backgroundSize: "contain", // Show entire image
+          backgroundPosition: "center",
+          height: "100vh", // Force full height
         }}
       >
-        <div className="relative w-full flex items-center justify-center">
+        <div className="relative w-full flex items-center justify-center p-4">
           {/* Buttons container - always in DOM but with opacity transition */}
           <div 
-            className={`w-1/2 flex justify-around transition-opacity ${showButton ? 'duration-1000' : 'duration-300'} ease-in
-              ${showButton ? 'opacity-100 z-20' : 'opacity-0 z-0'} 
+            className={`w-full max-w-md flex flex-wrap justify-around gap-4 transition-opacity ${showButton ? 'duration-1000' : 'duration-300'} ease-in
+              ${showButton ? 'opacity-80 z-20' : 'opacity-0 z-0'} 
               ${!showButton ? 'pointer-events-none' : ''}`}
           >
             <ClientButton onClick={handleButtonClick}>

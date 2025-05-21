@@ -7,7 +7,7 @@ interface ButtonProps {
 }
 
 export default function ClientButton({
-    className = "btn bg-gradient-to-b from-green-500 to-green-800 border-none shadow-none text-white",
+    className = "btn btn-lg opacity-80 max-w-sm w-full sm:w-auto bg-gradient-to-b from-green-500 to-green-800 border-none shadow-none text-white",
     children,
     onClick
 }: ButtonProps) {
