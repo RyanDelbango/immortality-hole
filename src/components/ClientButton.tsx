@@ -3,13 +3,13 @@
 interface ButtonProps {
   className?: string;
   children: React.ReactNode;
-  message?: string;
+  onClick?: () => void;
 }
 
-export default function ClientButton({ className, children, message }: ButtonProps) {
+export default function ClientButton({ className, children, onClick }: ButtonProps) {
   const handleClick = () => {
-    if (message) {
-      alert(message);
+    if (onClick) {
+      onClick();
     }
   };
 
