@@ -15,6 +15,8 @@ export default function SpookyText({ isVisible }: SpookyTextProps) {
         YOU PEER INTO THE HOLE.
         <br/>
         THE BOTTOM ISN&apos;T VISIBLE.
+        <br/>
+        WHAT WILL YOU DO?
       </h1>
 
       <style jsx>{`
