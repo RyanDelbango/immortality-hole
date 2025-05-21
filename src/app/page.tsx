@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import ClientButton from "@/components/ClientButton";
 import ContentCard from "@/components/ContentCard";
+import SpookyText from "@/components/SpookyText";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
@@ -57,7 +58,9 @@ export default function Home() {
           height: "100vh", // Force full height
         }}
       >
-        <div className="relative w-full flex items-center justify-center p-4">
+        <div className="relative w-full flex flex-col items-center justify-center p-4">
+          <SpookyText isVisible={showButton} />
+          
           {/* Buttons container - always in DOM but with opacity transition */}
           <div 
             className={`w-full max-w-md flex flex-wrap justify-around gap-4 transition-opacity ${showButton ? 'duration-1000' : 'duration-300'} ease-in
