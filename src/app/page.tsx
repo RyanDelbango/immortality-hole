@@ -1,7 +1,11 @@
+import ClientButton from "@/components/ClientButton";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Hello World</h1>
+      <ClientButton message="Hello World" className="btn btn-soft">
+        Primary
+      </ClientButton>
     </div>
   );
 }
