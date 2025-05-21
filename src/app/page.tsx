@@ -63,11 +63,11 @@ export default function Home() {
               ${showButton ? 'opacity-100 z-20' : 'opacity-0 z-0'} 
               ${!showButton ? 'pointer-events-none' : ''}`}
           >
-            <ClientButton className="btn btn-soft" onClick={handleButtonClick}>
-              Primary
+            <ClientButton onClick={handleButtonClick}>
+              Make an Offering
             </ClientButton>
-            <ClientButton className="btn btn-soft" onClick={handleButtonClick}>
-              Secondary
+            <ClientButton onClick={handleButtonClick}>
+              Leave a Message
             </ClientButton>
           </div>
           

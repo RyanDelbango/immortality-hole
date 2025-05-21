@@ -1,21 +1,25 @@
 "use client";
 
 interface ButtonProps {
-  className?: string;
-  children: React.ReactNode;
-  onClick?: () => void;
+    className?: string;
+    children: React.ReactNode;
+    onClick?: () => void;
 }
 
-export default function ClientButton({ className, children, onClick }: ButtonProps) {
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
+export default function ClientButton({
+    className = "btn bg-gradient-to-b from-green-500 to-green-800 border-none shadow-none text-white",
+    children,
+    onClick
+}: ButtonProps) {
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+        }
+    };
 
-  return (
-    <button onClick={handleClick} className={className}>
-      {children}
-    </button>
-  );
+    return (
+        <button onClick={handleClick} className={className}>
+            {children}
+        </button>
+    );
 } 
