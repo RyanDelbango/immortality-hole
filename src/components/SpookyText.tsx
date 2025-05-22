@@ -11,7 +11,7 @@ export default function SpookyText({ isVisible }: SpookyTextProps) {
         ${isVisible ? 'opacity-80' : 'opacity-0'} 
         ${!isVisible ? 'pointer-events-none' : ''}`}
     >
-      <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-mono tracking-widest leading-relaxed px-4 glitch-text">
+      <h1 className="text-white text-2xl md:text-4xl lg:text-4xl font-mono tracking-widest leading-relaxed px-4 glitch-text">
         YOU PEER INTO THE HOLE.
         <br/>
         THE BOTTOM ISN&apos;T VISIBLE.
