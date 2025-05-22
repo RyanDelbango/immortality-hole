@@ -5,21 +5,23 @@ import ClientButton from "@/components/ClientButton";
 import ContentCard from "@/components/ContentCard";
 import SpookyText from "@/components/SpookyText";
 import TextInputBox from "@/components/TextInputBox";
+import TextAreaBox from "@/components/TextAreaBox";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
   const [showTextInput, setShowTextInput] = useState(false);
-
+  const [selectedOption, setSelectedOption] = useState<"message" | "offering" | null>(null);
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
     }, 1000);
-
+    
     return () => clearTimeout(timer);
   }, []);
-
+  
   // Monitor showCard changes to handle DOM visibility
   useEffect(() => {
     if (showCard) {
@@ -36,33 +38,48 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [showCard]);
-
-  const handleButtonClick = () => {
+  
+  const handleMessageButtonClick = () => {
+    setSelectedOption("message");
     setShowButton(false);
     setTimeout(() => {
       setShowCard(true);
     }, 500); // Small delay to ensure buttons fade out first
   };
-
+  
+  const handleOfferingButtonClick = () => {
+    setSelectedOption("offering");
+    setShowButton(false);
+    setTimeout(() => {
+      setShowCard(true);
+    }, 500); // Small delay to ensure buttons fade out first
+  };
+  
   const handleArrowClick = () => {
     setShowCard(false);
     setTimeout(() => {
       setShowButton(true);
+      setSelectedOption(null);
     }, 500); // Small delay to ensure card fades out first
   };
-
+  
   const handleMessageSubmit = (message: string) => {
     console.log("Message submitted:", message);
     // Here you can add logic to process the submitted message
   };
-
+  
+  const handleOfferingSubmit = (offering: string) => {
+    console.log("Offering submitted:", offering);
+    // Here you can add logic to process the submitted offering
+  };
+  
   return (
-    <div
+    <div 
       className="min-h-screen w-full bg-black"
     >
-      <div
+      <div 
         className="flex items-center justify-center min-h-screen bg-no-repeat bg-center"
-        style={{
+        style={{ 
           backgroundImage: "url('/hole.png')",
           backgroundSize: "contain", // Show entire image
           backgroundPosition: "center",
@@ -70,7 +87,7 @@ export default function Home() {
         }}
       >
         <div className="relative w-full flex flex-col items-center justify-center p-4">
-          <SpookyText
+          <SpookyText 
             isVisible={showButton}
             text={
               <>
@@ -80,33 +97,44 @@ export default function Home() {
                 <br />
                 WHAT WILL YOU DO?
               </>
-            }
+            } 
           />
-
+          
           {/* Buttons container - always in DOM but with opacity transition */}
-          <div
+          <div 
             className={`w-full max-w-md flex flex-wrap justify-around gap-4 transition-opacity ${showButton ? 'duration-1000' : 'duration-300'} ease-in
               ${showButton ? 'opacity-80 z-20' : 'opacity-0 z-0'} 
               ${!showButton ? 'pointer-events-none' : ''}`}
           >
-            <ClientButton onClick={handleButtonClick}>
+            <ClientButton onClick={handleOfferingButtonClick}>
               Make an Offering
             </ClientButton>
-            <ClientButton onClick={handleButtonClick}>
+            <ClientButton onClick={handleMessageButtonClick}>
               Leave a Message
             </ClientButton>
           </div>
-
-          {/* Card component - stays in DOM during transition */}
+          
+          {/* Card or TextArea component - stays in DOM during transition */}
           {cardVisible && (
             <div className={`absolute ${showCard ? 'z-20' : 'z-0'}`}>
-              <ContentCard onArrowClick={handleArrowClick} isVisible={showCard} />
-              {/* Text input box below the card */}
-              <TextInputBox
-                onSubmit={handleMessageSubmit}
-                isVisible={showTextInput}
-                placeholder="Write your message to the void..."
-              />
+              {selectedOption === "message" ? (
+                <>
+                  <ContentCard onArrowClick={handleArrowClick} isVisible={showCard} />
+                  {/* Text input box below the card */}
+                  <TextInputBox 
+                    onSubmit={handleMessageSubmit} 
+                    isVisible={showTextInput} 
+                    placeholder="Write your message to the void..." 
+                  />
+                </>
+              ) : selectedOption === "offering" ? (
+                <TextAreaBox 
+                  onSubmit={handleOfferingSubmit}
+                  onArrowClick={handleArrowClick}
+                  isVisible={showTextInput} 
+                  placeholder="Describe your offering to the void..." 
+                />
+              ) : null}
             </div>
           )}
         </div>
