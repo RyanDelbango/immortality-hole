@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import ClientButton from "@/components/ClientButton";
 import ContentCard from "@/components/ContentCard";
 import SpookyText from "@/components/SpookyText";
+import TextInputBox from "@/components/TextInputBox";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
+  const [showTextInput, setShowTextInput] = useState(false);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,7 +24,13 @@ export default function Home() {
   useEffect(() => {
     if (showCard) {
       setCardVisible(true);
+      // Show text input after card appears with a slight delay
+      setTimeout(() => {
+        setShowTextInput(true);
+      }, 300);
     } else {
+      // Hide text input first
+      setShowTextInput(false);
       // When hiding card, delay removing it from DOM until animation completes
       const timer = setTimeout(() => {
         setCardVisible(false);
@@ -43,6 +51,11 @@ export default function Home() {
     setTimeout(() => {
       setShowButton(true);
     }, 500); // Small delay to ensure card fades out first
+  };
+  
+  const handleMessageSubmit = (message: string) => {
+    console.log("Message submitted:", message);
+    // Here you can add logic to process the submitted message
   };
   
   return (
@@ -79,6 +92,12 @@ export default function Home() {
           {cardVisible && (
             <div className={`absolute ${showCard ? 'z-20' : 'z-0'}`}>
               <ContentCard onArrowClick={handleArrowClick} isVisible={showCard} />
+              {/* Text input box below the card */}
+              <TextInputBox 
+                onSubmit={handleMessageSubmit} 
+                isVisible={showTextInput} 
+                placeholder="Write your message to the void..." 
+              />
             </div>
           )}
         </div>
