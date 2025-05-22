@@ -26,11 +26,11 @@ export default function TextAreaBox({
   };
 
   return (
-    <div className={`w-full max-w-md mx-auto mt-4 transition-opacity fixed-width-container
-      ${isVisible ? 'duration-1000 opacity-80' : 'duration-300 opacity-0'} 
+    <div className={`fixed-width-container mt-4 transition-opacity
+      ${isVisible ? 'duration-1000 opacity-70' : 'duration-300 opacity-0'} 
       ${!isVisible ? 'pointer-events-none' : ''}`}
     >
-      <form onSubmit={handleSubmit} className="flex flex-col bg-base-200 bg-opacity-70 rounded-lg overflow-hidden">
+      <form onSubmit={handleSubmit} className="flex flex-col bg-base-200 bg-opacity-60 rounded-lg overflow-hidden">
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -75,8 +75,13 @@ export default function TextAreaBox({
       
       <style jsx>{`
         .fixed-width-container {
-          width: 100%;
-          max-width: 28rem; /* equivalent to max-w-md (448px) */
+          width: 280px;
+          max-width: 280px;
+          min-width: 280px;
+          margin-left: auto;
+          margin-right: auto;
+          box-sizing: border-box;
+          overflow-x: hidden;
         }
       `}</style>
     </div>

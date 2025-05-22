@@ -25,11 +25,11 @@ export default function ContentCard({
   }, [messages]);
 
   return (
-    <div className={`w-full max-w-md mx-auto transition-opacity fixed-width-container
-      ${isVisible ? 'duration-1000 opacity-80' : 'duration-300 opacity-0'} 
+    <div className={`fixed-width-container transition-opacity
+      ${isVisible ? 'duration-1000 opacity-70' : 'duration-300 opacity-0'} 
       ${!isVisible ? 'pointer-events-none' : ''}`}>
-      <div className="card w-full bg-base-100 bg-opacity-70 shadow-xl">
-        <div className="card-body items-center text-center p-6 h-[300px] relative">
+      <div className="card bg-base-100 bg-opacity-60 shadow-xl">
+        <div className="card-body items-center text-center p-6 h-[240px] relative">
           <button 
             className="btn btn-ghost btn-circle absolute top-2 left-2" 
             onClick={onArrowClick}
@@ -45,13 +45,13 @@ export default function ContentCard({
                 <div className="w-full flex-grow overflow-y-auto text-left font-mono text-sm">
                   <div className="space-y-2 px-2">
                     {messages.map((msg, index) => (
-                      <div key={index} className="whitespace-pre-wrap break-words">{msg}</div>
+                      <div key={index} className="whitespace-pre-wrap break-words overflow-hidden">{msg}</div>
                     ))}
                   </div>
                 </div>
               </div>
             ) : content ? (
-              <p className="text-center break-words">{content}</p>
+              <p className="text-center break-words overflow-hidden">{content}</p>
             ) : null}
           </div>
         </div>
@@ -59,8 +59,13 @@ export default function ContentCard({
       
       <style jsx>{`
         .fixed-width-container {
-          width: 100%;
-          max-width: 28rem; /* equivalent to max-w-md (448px) */
+          width: 280px;
+          max-width: 280px;
+          min-width: 280px;
+          margin-left: auto;
+          margin-right: auto;
+          box-sizing: border-box;
+          overflow-x: hidden;
         }
       `}</style>
     </div>
