@@ -2,9 +2,13 @@
 
 interface SpookyTextProps {
   isVisible: boolean;
+  text?: React.ReactNode;
 }
 
-export default function SpookyText({ isVisible }: SpookyTextProps) {
+export default function SpookyText({ 
+  isVisible, 
+  text
+}: SpookyTextProps) {
   return (
     <div 
       className={`w-full text-center mb-8 transition-opacity ${isVisible ? 'duration-1000' : 'duration-300'} ease-in
@@ -12,11 +16,7 @@ export default function SpookyText({ isVisible }: SpookyTextProps) {
         ${!isVisible ? 'pointer-events-none' : ''}`}
     >
       <h1 className="text-white text-2xl md:text-4xl lg:text-4xl font-mono tracking-widest leading-relaxed px-4 glitch-text">
-        YOU PEER INTO THE HOLE.
-        <br/>
-        THE BOTTOM ISN&apos;T VISIBLE.
-        <br/>
-        WHAT WILL YOU DO?
+        {text}
       </h1>
 
       <style jsx>{`

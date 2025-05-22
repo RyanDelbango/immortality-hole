@@ -24,7 +24,7 @@ export default function TextInputBox({
   };
 
   return (
-    <div className={`w-full max-w-md mx-auto mt-4 transition-opacity ${isVisible ? 'duration-1000' : 'duration-300'} ease-in
+    <div className={`w-full max-w-md mx-auto mt-4 transition-opacity ${isVisible ? 'duration-800' : 'duration-300'} ease-in
       ${isVisible ? 'opacity-80' : 'opacity-0'} 
       ${!isVisible ? 'pointer-events-none' : ''}`}
     >
