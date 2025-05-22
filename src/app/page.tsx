@@ -13,6 +13,7 @@ export default function Home() {
   const [cardVisible, setCardVisible] = useState(false);
   const [showTextInput, setShowTextInput] = useState(false);
   const [selectedOption, setSelectedOption] = useState<"message" | "offering" | null>(null);
+  const [submittedOffering, setSubmittedOffering] = useState("");
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,6 +50,7 @@ export default function Home() {
   
   const handleOfferingButtonClick = () => {
     setSelectedOption("offering");
+    setSubmittedOffering("");
     setShowButton(false);
     setTimeout(() => {
       setShowCard(true);
@@ -60,6 +62,7 @@ export default function Home() {
     setTimeout(() => {
       setShowButton(true);
       setSelectedOption(null);
+      setSubmittedOffering("");
     }, 500); // Small delay to ensure card fades out first
   };
   
@@ -70,7 +73,7 @@ export default function Home() {
   
   const handleOfferingSubmit = (offering: string) => {
     console.log("Offering submitted:", offering);
-    // Here you can add logic to process the submitted offering
+    setSubmittedOffering(offering);
   };
   
   return (
@@ -127,12 +130,18 @@ export default function Home() {
                     placeholder="Write your message to the void..." 
                   />
                 </>
-              ) : selectedOption === "offering" ? (
+              ) : selectedOption === "offering" && submittedOffering === "" ? (
                 <TextAreaBox 
-                  onSubmit={handleOfferingSubmit}
+                  onSubmit={handleOfferingSubmit} 
                   onArrowClick={handleArrowClick}
                   isVisible={showTextInput} 
                   placeholder="Describe your offering to the void..." 
+                />
+              ) : selectedOption === "offering" && submittedOffering !== "" ? (
+                <ContentCard
+                  onArrowClick={handleArrowClick} 
+                  isVisible={showCard}
+                  content={`Your offering has been accepted:\n"${submittedOffering}"`}
                 />
               ) : null}
             </div>

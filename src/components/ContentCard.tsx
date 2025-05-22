@@ -3,9 +3,10 @@
 interface ContentCardProps {
   onArrowClick: () => void;
   isVisible: boolean;
+  content?: string;
 }
 
-export default function ContentCard({ onArrowClick, isVisible }: ContentCardProps) {
+export default function ContentCard({ onArrowClick, isVisible, content = "Testing Content Will Appear Here" }: ContentCardProps) {
   return (
     <div className={`transition-opacity ${isVisible ? 'duration-1000' : 'duration-300'} ease-in ${isVisible ? 'opacity-80' : 'opacity-0'} ${!isVisible ? 'pointer-events-none' : ''}`}>
       <div className="card w-full max-w-2xl mx-auto bg-base-100 shadow-xl">
@@ -20,7 +21,9 @@ export default function ContentCard({ onArrowClick, isVisible }: ContentCardProp
             </svg>
           </button>
           <div className="pt-8 w-full">
-            <h2 className="card-title text-xl sm:text-2xl mb-4 justify-center">Testing Content Will Appear Here</h2>
+            <h2 className="card-title text-xl sm:text-2xl mb-4 justify-center">
+              {content}
+            </h2>
           </div>
         </div>
       </div>
