@@ -14,6 +14,7 @@ export default function Home() {
   const [showTextInput, setShowTextInput] = useState(false);
   const [selectedOption, setSelectedOption] = useState<"message" | "offering" | null>(null);
   const [submittedOffering, setSubmittedOffering] = useState("");
+  const [messages, setMessages] = useState<string[]>([]);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,12 +64,17 @@ export default function Home() {
       setShowButton(true);
       setSelectedOption(null);
       setSubmittedOffering("");
+      // Don't clear messages when going back, so they persist across sessions
     }, 500); // Small delay to ensure card fades out first
   };
   
   const handleMessageSubmit = (message: string) => {
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString();
+    const formattedTime = now.toLocaleTimeString();
+    const timestampedMessage = `[${formattedDate} ${formattedTime}] ${message}`;
     console.log("Message submitted:", message);
-    // Here you can add logic to process the submitted message
+    setMessages(prev => [timestampedMessage, ...prev]);
   };
   
   const handleOfferingSubmit = (offering: string) => {
@@ -122,7 +128,11 @@ export default function Home() {
             <div className={`absolute ${showCard ? 'z-20' : 'z-0'}`}>
               {selectedOption === "message" ? (
                 <>
-                  <ContentCard onArrowClick={handleArrowClick} isVisible={showCard} />
+                  <ContentCard 
+                    onArrowClick={handleArrowClick} 
+                    isVisible={showCard} 
+                    messages={messages}
+                  />
                   {/* Text input box below the card */}
                   <TextInputBox 
                     onSubmit={handleMessageSubmit} 
