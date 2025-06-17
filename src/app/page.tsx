@@ -40,6 +40,29 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [showCard]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+        if (selectedOption === 'message') {
+            try {
+                const response = await fetch('/api/messages');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch messages');
+                }
+                const fetchedMessages: { message: string, timestamp: string }[] = await response.json();
+                const formattedMessages = fetchedMessages.map(msg => {
+                    const date = new Date(msg.timestamp);
+                    return `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${msg.message}`;
+                });
+                setMessages(formattedMessages);
+            } catch (error) {
+                console.error('Failed to fetch messages:', error);
+            }
+        }
+    };
+
+    fetchMessages();
+  }, [selectedOption]);
   
   const handleMessageButtonClick = () => {
     setSelectedOption("message");
@@ -68,18 +91,46 @@ export default function Home() {
     }, 500); // Small delay to ensure card fades out first
   };
   
-  const handleMessageSubmit = (message: string) => {
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString();
-    const formattedTime = now.toLocaleTimeString();
-    const timestampedMessage = `[${formattedDate} ${formattedTime}] ${message}`;
-    console.log("Message submitted:", message);
-    setMessages(prev => [timestampedMessage, ...prev]);
+  const handleMessageSubmit = async (message: string) => {
+    try {
+        const response = await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to submit message');
+        }
+
+        const newMessage: { message: string, timestamp: string } = await response.json();
+        const date = new Date(newMessage.timestamp);
+        const timestampedMessage = `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${newMessage.message}`;
+        setMessages(prev => [timestampedMessage, ...prev]);
+    } catch (error) {
+        console.error("Message submission failed:", error);
+    }
   };
   
-  const handleOfferingSubmit = (offering: string) => {
-    console.log("Offering submitted:", offering);
-    setSubmittedOffering(offering);
+  const handleOfferingSubmit = async (offering: string) => {
+    try {
+      const response = await fetch('/api/offerings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ offering }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit offering');
+      }
+
+      const newOffering = await response.json();
+      setSubmittedOffering(newOffering.offering);
+    } catch (error) {
+      console.error("Offering submission failed:", error);
+    }
   };
   
   return (
