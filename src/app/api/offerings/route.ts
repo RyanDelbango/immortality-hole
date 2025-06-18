@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 export async function GET() {
@@ -15,11 +15,27 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const docRef = await addDoc(collection(db, 'offerings'), body);
-    return NextResponse.json({ id: docRef.id, ...body });
+    const { offering } = await req.json();
+    if (!offering) {
+      return NextResponse.json({ error: 'Offering text is required' }, { status: 400 });
+    }
+
+    const newOffering = {
+      offering: offering,
+      timestamp: Timestamp.now()
+    };
+
+    const docRef = await addDoc(collection(db, 'offerings'), newOffering);
+
+    // Return the full object so the client can use the server-generated timestamp
+    return NextResponse.json({ 
+      id: docRef.id, 
+      offering: newOffering.offering,
+      timestamp: newOffering.timestamp.toDate().toISOString() // Convert to a serializable format
+    }, { status: 201 });
+
   } catch (error) {
-    console.error('Failed to create offering:', error);
-    return NextResponse.json({ error: 'Failed to create offering' }, { status: 500 });
+    console.error('Error adding document: ', error);
+    return NextResponse.json({ error: 'Failed to submit offering' }, { status: 500 });
   }
 }

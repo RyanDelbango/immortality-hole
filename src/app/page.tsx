@@ -112,25 +112,23 @@ export default function Home() {
     }
   };
   
-  const handleOfferingSubmit = async (offering: string) => {
-    try {
-      const response = await fetch('/api/offerings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ offering }),
-      });
+  const handleOfferingSubmit = (offering: string) => {
+    // Optimistically update the UI for an instant response.
+    // A client-side timestamp is used for immediate feedback.
+    const date = new Date();
+    const timestampedOffering = `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${offering}`;
+    setSubmittedOffering(timestampedOffering);
 
-      if (!response.ok) {
-        throw new Error('Failed to submit offering');
-      }
-
-      const newOffering = await response.json();
-      setSubmittedOffering(newOffering.offering);
-    } catch (error) {
-      console.error("Offering submission failed:", error);
-    }
+    // Send the actual request to the server in the background.
+    fetch('/api/offerings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ offering }),
+    }).catch(error => {
+      // If the background request fails, log the error.
+      // Optionally, we could inform the user or revert the UI change here.
+      console.error("Offering submission failed in the background:", error);
+    });
   };
   
   return (

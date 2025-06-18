@@ -51,7 +51,7 @@ export default function ContentCard({
                 </div>
               </div>
             ) : content ? (
-              <p className="text-center break-words overflow-hidden">{content}</p>
+              <p className="text-center break-words overflow-hidden whitespace-pre-wrap">{content}</p>
             ) : null}
           </div>
         </div>
