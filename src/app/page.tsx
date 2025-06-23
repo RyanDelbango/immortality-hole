@@ -7,6 +7,14 @@ import SpookyText from "@/components/SpookyText";
 import TextInputBox from "@/components/TextInputBox";
 import TextAreaBox from "@/components/TextAreaBox";
 
+interface BlogPostData {
+  id: string;
+  title: string;
+  image: string;
+  link: string;
+  text: string;
+}
+
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
   const [showCard, setShowCard] = useState(false);
@@ -15,6 +23,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState<"message" | "offering" | null>(null);
   const [submittedOffering, setSubmittedOffering] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPostData[]>([]);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,6 +72,23 @@ export default function Home() {
 
     fetchMessages();
   }, [selectedOption]);
+
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    try {
+      const response = await fetch('/api/blogs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog posts');
+      }
+      const posts: BlogPostData[] = await response.json();
+      setBlogPosts(posts);
+    } catch (error) {
+      console.error('Failed to fetch blog posts:', error);
+    }
+  };
   
   const handleMessageButtonClick = () => {
     setSelectedOption("message");
@@ -112,9 +138,8 @@ export default function Home() {
     }
   };
   
-  const handleOfferingSubmit = (offering: string) => {
+  const handleOfferingSubmit = async (offering: string) => {
     // Optimistically update the UI for an instant response.
-    // A client-side timestamp is used for immediate feedback.
     const date = new Date();
     const timestampedOffering = `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${offering}`;
     setSubmittedOffering(timestampedOffering);
@@ -126,7 +151,6 @@ export default function Home() {
       body: JSON.stringify({ offering }),
     }).catch(error => {
       // If the background request fails, log the error.
-      // Optionally, we could inform the user or revert the UI change here.
       console.error("Offering submission failed in the background:", error);
     });
   };
@@ -200,7 +224,7 @@ export default function Home() {
                 <ContentCard
                   onArrowClick={handleArrowClick} 
                   isVisible={showCard}
-                  content={`Your offering has been accepted:\n"${submittedOffering}"`}
+                  blogPosts={blogPosts}
                 />
               ) : null}
             </div>
