@@ -33,7 +33,7 @@ export default function ContentCard({
       ${isVisible ? 'duration-1000 opacity-70' : 'duration-300 opacity-0'} 
       ${!isVisible ? 'pointer-events-none' : ''}`}>
       <div className="card bg-base-100 bg-opacity-60 shadow-xl">
-        <div className="card-body items-center text-center p-6 h-[240px] relative">
+        <div className="card-body items-center text-center p-6 h-[400px] relative">
           <button 
             className="btn btn-ghost btn-circle absolute top-2 left-2 z-10" 
             onClick={onArrowClick}
@@ -72,9 +72,9 @@ export default function ContentCard({
       
       <style jsx>{`
         .fixed-width-container {
-          width: 280px;
-          max-width: 280px;
-          min-width: 280px;
+          width: 350px;
+          max-width: 350px;
+          min-width: 350px;
           margin-left: auto;
           margin-right: auto;
           box-sizing: border-box;
