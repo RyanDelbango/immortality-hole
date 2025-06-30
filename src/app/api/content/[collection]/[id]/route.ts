@@ -64,7 +64,7 @@ export async function DELETE(
   { params }: { params: { collection: string; id: string } }
 ) {
   try {
-    const { collection, id } = params;
+    const { collection, id } = await params;
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
     }
