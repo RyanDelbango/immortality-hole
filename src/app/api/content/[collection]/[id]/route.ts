@@ -6,10 +6,10 @@ const VALID_COLLECTIONS = ['blogs', 'offerings', 'messages'];
 
 export async function GET(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
+  context: { params: { collection: string; id: string } }
 ) {
+  const { collection, id } = context.params;
   try {
-    const { collection, id } = params;
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
     }
@@ -23,17 +23,17 @@ export async function GET(
 
     return NextResponse.json({ id: docSnap.id, ...docSnap.data() }, { status: 200 });
   } catch (error) {
-    console.error(`Failed to fetch document from ${params.collection}:`, error instanceof Error ? error.message : String(error));
+    console.error(`Failed to fetch document from ${collection}:`, error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: 'Failed to fetch document' }, { status: 500 });
   }
 }
 
 export async function PUT(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
+  context: { params: { collection: string; id: string } }
 ) {
+  const { collection, id } = context.params;
   try {
-    const { collection, id } = params;
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
     }
@@ -54,17 +54,17 @@ export async function PUT(
 
     return NextResponse.json({ message: 'Document updated successfully' }, { status: 200 });
   } catch (error) {
-    console.error(`Failed to update document in ${params.collection}:`, error instanceof Error ? error.message : String(error));
+    console.error(`Failed to update document in ${collection}:`, error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: 'Failed to update document' }, { status: 500 });
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
+  context: { params: { collection: string; id: string } }
 ) {
+  const { collection, id } = context.params;
   try {
-    const { collection, id } = params;
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
     }
@@ -74,7 +74,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: 'Document deleted successfully' });
   } catch (error) {
-    console.error(`Failed to delete document from ${params.collection}:`, error instanceof Error ? error.message : String(error));
+    console.error(`Failed to delete document from ${collection}:`, error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: 'Failed to delete document' }, { status: 500 });
   }
 }
