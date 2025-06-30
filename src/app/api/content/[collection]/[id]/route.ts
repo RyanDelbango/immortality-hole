@@ -4,13 +4,11 @@ import { NextResponse } from 'next/server';
 
 const VALID_COLLECTIONS = ['blogs', 'offerings', 'messages'];
 
-
-
 export async function GET(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
-): Promise<NextResponse> {
-  const { collection, id } = params;
+  context: { params: { collection: string; id: string } }
+) {
+  const { collection, id } = context.params;
   try {
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
@@ -32,9 +30,9 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
-): Promise<NextResponse> {
-  const { collection, id } = params;
+  context: { params: { collection: string; id: string } }
+) {
+  const { collection, id } = context.params;
   try {
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
@@ -63,9 +61,9 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { collection: string; id: string } }
-): Promise<NextResponse> {
-  const { collection, id } = params;
+  context: { params: { collection: string; id: string } }
+) {
+  const { collection, id } = context.params;
   try {
     if (!VALID_COLLECTIONS.includes(collection)) {
       return NextResponse.json({ error: 'Invalid collection' }, { status: 400 });
