@@ -13,7 +13,7 @@ export async function GET() {
       return { 
         id: doc.id, 
         message: data.message,
-        timestamp: data.timestamp.toDate() // Convert to JS Date
+        timestamp: data.timestamp ? data.timestamp.toDate() : new Date() // Safely convert to JS Date
       };
     });
 
@@ -28,12 +28,22 @@ export async function GET() {
         image: data.image,
         link: data.link,
         text: data.content, // Mapping 'content' to 'text'
+        timestamp: data.timestamp ? data.timestamp.toDate() : new Date(0),
       };
-    });
+    }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     // Fetch offerings
-    const offeringsSnapshot = await getDocs(collection(db, 'offerings'));
-    const offerings = offeringsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const offeringsRef = collection(db, 'offerings');
+    const offeringsQuery = query(offeringsRef, orderBy('timestamp', 'desc'));
+    const offeringsSnapshot = await getDocs(offeringsQuery);
+    const offerings = offeringsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        offering: data.offering,
+        timestamp: data.timestamp ? data.timestamp.toDate() : new Date()
+      };
+    });
 
     return NextResponse.json({
       messages,
