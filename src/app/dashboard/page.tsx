@@ -36,6 +36,9 @@ export default function Dashboard() {
   const [editedBlog, setEditedBlog] = useState<Partial<Blog>>({});
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const fetchData = async () => {
     try {
@@ -65,6 +68,17 @@ export default function Dashboard() {
     setIsRefreshing(true);
     await fetchData();
     setIsRefreshing(false);
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD) {
+      setIsAuthenticated(true);
+      setError('');
+    } else {
+      setError('Incorrect password. Please try again.');
+      setPassword('');
+    }
   };
 
   const handleEditClick = (blog: Blog) => {
@@ -236,15 +250,40 @@ export default function Dashboard() {
     );
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen w-full bg-gray-900 text-gray-200 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-gray-800/60 border border-gray-700 rounded-xl p-8 shadow-2xl">
+          <h1 className="text-4xl font-bold text-center mb-6 text-purple-400">Dashboard Access</h1>
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input input-bordered w-full bg-gray-700 border-gray-600 focus:ring-purple-500 focus:border-purple-500"
+                required
+              />
+            </div>
+            {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+            <button type="submit" className="btn btn-primary w-full">Enter</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-200 p-4 sm:p-6 md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-10 text-purple-400 tracking-wider">Dashboard</h1>
         <div className="flex justify-center items-center mb-10">
           <div className="tabs tabs-boxed bg-gray-800/60 border border-gray-700">
-            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'blogs' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('blogs')} style={{ color: 'white !important' }}>Blogs</a> 
-            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'offerings' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('offerings')} style={{ color: 'white !important' }}>Offerings</a> 
-            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'messages' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('messages')} style={{ color: 'white !important' }}>Messages</a>
+            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'blogs' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('blogs')}>Blogs</a> 
+            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'offerings' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('offerings')}>Offerings</a> 
+            <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'messages' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('messages')}>Messages</a>
           </div>
           <button onClick={handleRefresh} className="btn btn-ghost ml-4" disabled={isRefreshing}>
             {isRefreshing ? <span className="loading loading-spinner"></span> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M20 20v-5h-5" /><path d="M4 9a9 9 0 0114.23-5.76M20 15a9 9 0 01-14.23 5.76" /></svg>}
