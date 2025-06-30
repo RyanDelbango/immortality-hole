@@ -35,29 +35,37 @@ export default function Dashboard() {
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
   const [editedBlog, setEditedBlog] = useState<Partial<Blog>>({});
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/content');
+      if (!response.ok) {
+        throw new Error('Failed to fetch content');
+      }
+      const data = await response.json();
+      setBlogs(data.blogs.sort((a: Blog, b: Blog) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+      setOfferings(data.offerings.sort((a: Offering, b: Offering) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+      setMessages(data.messages.sort((a: Message, b: Message) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/content');
-        if (!response.ok) {
-          throw new Error('Failed to fetch content');
-        }
-        const data = await response.json();
-        // Sort all data by timestamp descending on fetch
-        setBlogs(data.blogs.sort((a: Blog, b: Blog) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-        setOfferings(data.offerings.sort((a: Offering, b: Offering) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-        setMessages(data.messages.sort((a: Message, b: Message) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-      } finally {
+    const loadData = async () => {
+        setLoading(true);
+        await fetchData();
         setLoading(false);
-      }
     };
-
-    fetchData();
+    loadData();
   }, []);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchData();
+    setIsRefreshing(false);
+  };
 
   const handleEditClick = (blog: Blog) => {
     setEditingBlogId(blog.id);
@@ -232,12 +240,15 @@ export default function Dashboard() {
     <div className="min-h-screen w-full bg-gray-900 text-gray-200 p-4 sm:p-6 md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-10 text-purple-400 tracking-wider">Dashboard</h1>
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center items-center mb-10">
           <div className="tabs tabs-boxed bg-gray-800/60 border border-gray-700">
             <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'blogs' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('blogs')} style={{ color: 'white !important' }}>Blogs</a> 
             <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'offerings' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('offerings')} style={{ color: 'white !important' }}>Offerings</a> 
             <a className={`tab tab-lg transition-all duration-300 ${activeTab === 'messages' ? 'tab-active bg-purple-600' : ''}`} onClick={() => setActiveTab('messages')} style={{ color: 'white !important' }}>Messages</a>
           </div>
+          <button onClick={handleRefresh} className="btn btn-ghost ml-4" disabled={isRefreshing}>
+            {isRefreshing ? <span className="loading loading-spinner"></span> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M20 20v-5h-5" /><path d="M4 9a9 9 0 0114.23-5.76M20 15a9 9 0 01-14.23 5.76" /></svg>}
+          </button>
         </div>
         <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-6 shadow-2xl min-h-[36rem]">
           {renderContent()}
