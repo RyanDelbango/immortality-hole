@@ -51,45 +51,31 @@ export default function Home() {
   }, [showCard]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-        if (selectedOption === 'message') {
-            try {
-                const response = await fetch('/api/messages');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch messages');
-                }
-                const fetchedMessages: { message: string, timestamp: string }[] = await response.json();
-                const formattedMessages = fetchedMessages.map(msg => {
-                    const date = new Date(msg.timestamp);
-                    return `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${msg.message}`;
-                });
-                setMessages(formattedMessages);
-            } catch (error) {
-                console.error('Failed to fetch messages:', error);
-            }
+    const fetchContent = async () => {
+      try {
+        const response = await fetch('/api/content');
+        if (!response.ok) {
+          throw new Error('Failed to fetch content');
         }
+        const { messages, blogs } = await response.json();
+        
+        if (selectedOption === 'message') {
+          const formattedMessages = messages.map((msg: { message: string, timestamp: string }) => {
+            const date = new Date(msg.timestamp);
+            return `[${date.toLocaleDateString()} ${date.toLocaleTimeString()}] ${msg.message}`;
+          });
+          setMessages(formattedMessages);
+        }
+        
+        setBlogPosts(blogs);
+      } catch (error) {
+        console.error('Failed to fetch content:', error);
+      }
     };
 
-    fetchMessages();
+    fetchContent();
   }, [selectedOption]);
 
-  useEffect(() => {
-    fetchBlogPosts();
-  }, []);
-
-  const fetchBlogPosts = async () => {
-    try {
-      const response = await fetch('/api/blogs');
-      if (!response.ok) {
-        throw new Error('Failed to fetch blog posts');
-      }
-      const posts: BlogPostData[] = await response.json();
-      setBlogPosts(posts);
-    } catch (error) {
-      console.error('Failed to fetch blog posts:', error);
-    }
-  };
-  
   const handleMessageButtonClick = () => {
     setSelectedOption("message");
     setShowButton(false);
